@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.trsystem.mybatis.mapper.noticeMapper">
+    <select id="retrieveNoticeList" parameterType="map" resultType="com.trsystem.LowerHashMap">
+        SELECT
+        ROW_NUMBER()OVER ()ROWNUM
+        , NOTICE_ID
+        , NOTICE_TTL
+        , REG_EMP_ID
+        , REG_DT
+        , COUNT(*) OVER () AS TOTAL_ITEMS
+        FROM NOTICE n
+        WHERE 1=1
+        <if test="noticeTtl != null and !noticeTtl.equals('')">
+            AND NOTICE_TTL LIKE CONCAT('%',#{noticeTtl},'%')
+        </if>
+        <if test="noticeCn != null and !noticeCn.equals('')">
+            AND NOTICE_CN LIKE CONCAT('%',#{noticeCn},'%')
+        </if>
+        ORDER BY REG_DT DESC
+    </select>
+</mapper>
